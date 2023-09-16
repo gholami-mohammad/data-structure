@@ -94,6 +94,26 @@ func (l linkedList) print() {
 	fmt.Println("")
 }
 
+func (l linkedList) search(data int) *node {
+	if l.head == nil {
+		return nil
+	}
+
+	n := l.head
+	for {
+		if n.data == data {
+			return n
+		}
+
+		if n.next == nil {
+			break
+		}
+		n = n.next
+	}
+
+	return nil
+}
+
 func main() {
 	data := []int{9, 32, 52, 62, 3, 235, 351, 52, 11}
 
@@ -133,6 +153,18 @@ func main() {
 	list.deleteHead()
 	list.print()
 	fmt.Printf("Linked list length is: %d\n", list.length)
+	fmt.Println("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=")
+
+	// search
+	fmt.Println("Searching for 235")
+	r0 := list.search(235)
+	fmt.Printf("search result: %v\n", r0)
+	fmt.Println("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=")
+
+	// search
+	fmt.Println("Searching for 666")
+	r1 := list.search(666)
+	fmt.Printf("search result: %v\n", r1)
 	fmt.Println("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=")
 
 	fmt.Println("Empty list")
