@@ -39,12 +39,14 @@ func (h *MaxHeap) parentOf(index int) int {
 
 // re-sort the heap when an element added to the end of the heap
 func (h *MaxHeap) bubbleUp(index int) {
-	if h.heap[index] > h.parentOf(index) { // in value of index is greater that its parent, swap them
-		h.heap[index], h.heap[h.parentIndex(index)] = h.heap[h.parentIndex(index)], h.heap[index]
-		h.bubbleUp(h.parentIndex(index))
-		return
+	for {
+		if h.heap[index] > h.parentOf(index) { // in value of index is greater that its parent, swap them
+			h.heap[index], h.heap[h.parentIndex(index)] = h.heap[h.parentIndex(index)], h.heap[index]
+			index = h.parentIndex(index)
+		} else {
+			return
+		}
 	}
-	return
 }
 
 func (h *MaxHeap) bubbleDown(index int) {
@@ -52,35 +54,40 @@ func (h *MaxHeap) bubbleDown(index int) {
 	if heapLen == 1 { // last element remaining
 		return
 	}
-
-	leftIndex := h.leftIndex(index)
-	rightIndex := h.rightIndex(index)
-	if heapLen-1 < leftIndex { // element has no left and no right child
-
-	} else if heapLen-1 < rightIndex { // element has just left child
-		if h.heap[leftIndex] > h.heap[index] { // left element is greater that its parent, swap them
-			h.heap[leftIndex], h.heap[index] = h.heap[index], h.heap[leftIndex]
-			h.bubbleDown(leftIndex)
+	for {
+		leftIndex := h.leftIndex(index)
+		rightIndex := h.rightIndex(index)
+		if heapLen-1 < leftIndex { // element has no left and no right child
 			return
-		}
-	} else { // element has both right and left children
-		left := h.heap[leftIndex]
-		right := h.heap[rightIndex]
+		} else if heapLen-1 < rightIndex { // element has just left child
+			if h.heap[leftIndex] > h.heap[index] { // left element is greater that its parent, swap them
+				h.heap[leftIndex], h.heap[index] = h.heap[index], h.heap[leftIndex]
+				index = leftIndex
+				continue
+			} else {
+				return
+			}
+		} else { // element has both right and left children
+			left := h.heap[leftIndex]
+			right := h.heap[rightIndex]
 
-		// select max of right and left
-		chosenValue := left
-		chosenIndex := leftIndex
-		if right > left {
-			chosenValue = right
-			chosenIndex = rightIndex
-		}
+			// select max of right and left
+			chosenValue := left
+			chosenIndex := leftIndex
+			if right > left {
+				chosenValue = right
+				chosenIndex = rightIndex
+			}
 
-		// compare current value with chosen value
-		currentValue := h.heap[index]
-		if currentValue < chosenValue { // swap them
-			h.heap[index], h.heap[chosenIndex] = h.heap[chosenIndex], h.heap[index]
-			h.bubbleDown(chosenIndex)
-			return
+			// compare current value with chosen value
+			currentValue := h.heap[index]
+			if currentValue < chosenValue { // swap them
+				h.heap[index], h.heap[chosenIndex] = h.heap[chosenIndex], h.heap[index]
+				index = chosenIndex
+				continue
+			} else {
+				return
+			}
 		}
 	}
 
